@@ -7,17 +7,10 @@ import (
 	"github.com/mheob/create-react-tsx-component/utils"
 )
 
-var name string
-var dryRun bool
-var test bool
-
-func Init(options *models.CmdOptions) {
-	name = options.Name
-	dryRun = options.DryRun
-	test = options.Test
-
+func Run() {
 	fmt.Println("Creating Hook ...")
-	fmt.Println("name:", utils.ConvertFileName(options.Name, options.KebabCase))
-	fmt.Println("dry-run:", dryRun)
-	fmt.Println("test:", test)
+	fmt.Println("Name:", utils.ConvertFileName(models.CmdOptions.Name, models.CmdOptions.UsesKebabCase))
+	fmt.Println("Destination:", models.CmdOptions.Dest)
+	fmt.Println("OnlyDryRun:", models.CmdOptions.OnlyDryRun)
+	fmt.Println("WithoutTest:", models.CmdOptions.WithoutTest)
 }

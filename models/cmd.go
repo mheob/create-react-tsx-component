@@ -1,10 +1,13 @@
 package models
 
-type CmdOptions struct {
-	Name      string
-	Dest      string
-	DryRun    bool
-	KebabCase bool
-	Storybook bool
-	Test      bool
+type CmdOptionsModel struct {
+	Name string
+
+	Dest             string
+	OnlyDryRun       bool
+	UsesKebabCase    bool
+	WithoutStorybook bool
+	WithoutTest      bool
 }
+
+var CmdOptions = new(CmdOptionsModel)

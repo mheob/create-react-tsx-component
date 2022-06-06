@@ -14,19 +14,6 @@ var rootCmd = &cobra.Command{
 	Long: `Use 'crtc' to create a new React Component.
 You can also add new React Pages, Hooks and more.`,
 	CompletionOptions: cobra.CompletionOptions{DisableDefaultCmd: true},
-	// Run: func(cmd *cobra.Command, args []string) {
-	// hasFlag := false
-	// dryRun, _ := cmd.Flags().GetBool("dry-run")
-
-	// if !dryRun {
-	// 	// TODO: Add logic here
-	// 	// hasFlag = updateBrew()
-	// }
-
-	// if !hasFlag {
-	// 	// TODO: Add logic here
-	// }
-	// },
 }
 
 func Execute() {
@@ -39,6 +26,4 @@ func Execute() {
 func init() {
 	// disable default help command
 	rootCmd.SetHelpCommand(&cobra.Command{Hidden: true})
-
-	// rootCmd.Flags().Bool("dry-run", false, "Print only the changes, but don't write to disk")
 }

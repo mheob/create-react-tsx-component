@@ -2,17 +2,17 @@ package utils
 
 import "strings"
 
-func toCamelCase(str string, initCase bool) string {
-	str = strings.TrimSpace(str)
-	if str == "" {
-		return str
+func toCamelCase(s string, initCase bool) string {
+	s = strings.TrimSpace(s)
+	if s == "" {
+		return s
 	}
 
 	builder := strings.Builder{}
-	builder.Grow(len(str))
+	builder.Grow(len(s))
 	capNext := initCase
 
-	for index, char := range []byte(str) {
+	for i, char := range []byte(s) {
 		charIsCap := char >= 'A' && char <= 'Z'
 		charIsLow := char >= 'a' && char <= 'z'
 		charIsNum := char >= '0' && char <= '9'
@@ -22,7 +22,7 @@ func toCamelCase(str string, initCase bool) string {
 				char += 'A'
 				char -= 'a'
 			}
-		} else if index == 0 {
+		} else if i == 0 {
 			if charIsCap {
 				char += 'a'
 				char -= 'A'

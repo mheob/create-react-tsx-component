@@ -52,11 +52,11 @@ func convertFileNameToSnakeCase(tb testing.TB) {
 	fileNameChecks(cases, tb, true)
 }
 
-func fileNameChecks(cases [][]string, tb testing.TB, useKebabCase bool) {
+func fileNameChecks(cases [][]string, tb testing.TB, usesKebabCase bool) {
 	for _, index := range cases {
 		in := index[0]
 		out := index[1]
-		result := ConvertFileName(in, useKebabCase)
+		result := ConvertFileName(in, usesKebabCase)
 		if result != out {
 			tb.Errorf("%q (%q != %q)", in, result, out)
 		}

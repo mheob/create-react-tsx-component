@@ -1,7 +1,7 @@
 package utils
 
-func ConvertFileName(name string, useKebabCase bool) string {
-	if useKebabCase {
+func ConvertFileName(name string, usesKebabCase bool) string {
+	if usesKebabCase {
 		return ToKebabCase(name)
 	}
 

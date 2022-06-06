@@ -7,19 +7,11 @@ import (
 	"github.com/mheob/create-react-tsx-component/utils"
 )
 
-var name string
-var dryRun bool
-var storybook bool
-var test bool
-
-func Init(options *models.CmdOptions) {
-	dryRun = options.DryRun
-	storybook = options.Storybook
-	test = options.Test
-
+func Run() {
 	fmt.Println("Creating Component ...")
-	fmt.Println("name:", utils.ConvertFileName(options.Name, options.KebabCase))
-	fmt.Println("dry-run:", dryRun)
-	fmt.Println("storybook:", storybook)
-	fmt.Println("test:", test)
+	fmt.Println("Name:", utils.ConvertFileName(models.CmdOptions.Name, models.CmdOptions.UsesKebabCase))
+	fmt.Println("Destination:", models.CmdOptions.Dest)
+	fmt.Println("OnlyDryRun:", models.CmdOptions.OnlyDryRun)
+	fmt.Println("WithoutStorybook:", models.CmdOptions.WithoutStorybook)
+	fmt.Println("WithoutTest:", models.CmdOptions.WithoutTest)
 }

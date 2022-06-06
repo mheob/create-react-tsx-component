@@ -10,19 +10,19 @@ func ToKebabCase(str string) string {
 	return toDelimited(str, '-')
 }
 
-func toDelimited(str string, delimiter uint8) string {
-	str = strings.TrimSpace(str)
-	if str == "" {
-		return str
+func toDelimited(s string, delimiter uint8) string {
+	s = strings.TrimSpace(s)
+	if s == "" {
+		return s
 	}
 
 	builder := strings.Builder{}
-	builder.Grow(len(str) + 2) // nominal 2 bytes of extra space for inserted delimiters
+	builder.Grow(len(s) + 2) // nominal 2 bytes of extra space for inserted delimiters
 
-	for index, char := range []byte(str) {
+	for i, char := range []byte(s) {
 		// treat acronyms as words, eg for JSONData -> JSON is a whole word
-		if index+1 < len(str) {
-			next := str[index+1]
+		if i+1 < len(s) {
+			next := s[i+1]
 
 			if CharIsDelimiter(char) && CharIsDelimiter(next) {
 				continue
@@ -40,9 +40,9 @@ func toDelimited(str string, delimiter uint8) string {
 				(charIsLow && (nextIsCap || nextIsNum)) ||
 				(charIsNum && (nextIsCap || nextIsLow)) {
 				if charIsCap && nextIsLow {
-					if prevIsCap := index > 0 &&
-						str[index-1] >= 'A' &&
-						str[index-1] <= 'Z'; prevIsCap {
+					if prevIsCap := i > 0 &&
+						s[i-1] >= 'A' &&
+						s[i-1] <= 'Z'; prevIsCap {
 						builder.WriteByte(delimiter)
 					}
 				}
