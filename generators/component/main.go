@@ -1,4 +1,4 @@
-package hook
+package component
 
 import (
 	"fmt"
@@ -8,9 +8,10 @@ import (
 )
 
 func Run() {
-	fmt.Println("Creating Hook ...")
+	fmt.Println("Creating Component ...")
 	fmt.Println("Name:", utils.ConvertFileName(models.CmdOptions.Name, models.CmdOptions.UsesKebabCase))
 	fmt.Println("Destination:", models.CmdOptions.Dest)
 	fmt.Println("OnlyDryRun:", models.CmdOptions.OnlyDryRun)
-	fmt.Println("WithoutTest:", models.CmdOptions.WithoutTest)
+	fmt.Println("ShouldSkipStorybook:", models.CmdOptions.ShouldSkipStorybook)
+	fmt.Println("ShouldSkipTest:", models.CmdOptions.ShouldSkipTest)
 }
