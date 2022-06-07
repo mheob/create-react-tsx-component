@@ -38,14 +38,15 @@ func rootCmdRun(cmd *cobra.Command, args []string) {
 	prompts.NamePrompt()
 	prompts.DestPrompt()
 	prompts.UsesKebabCasePrompt()
-	prompts.ShouldSkipStorybookPrompt()
-	prompts.ShouldSkipTestPrompt()
 
 	switch models.CmdOptions.Type {
 	case "component":
+		prompts.ShouldSkipStorybookPrompt()
+		prompts.ShouldSkipTestPrompt()
 		component.Run()
 		break
 	case "hook":
+		prompts.ShouldSkipTestPrompt()
 		hook.Run()
 		break
 	case "page":

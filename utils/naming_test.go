@@ -1,6 +1,10 @@
 package utils
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func TestConvertFileNameToPascalCase(t *testing.T) {
 	convertFileNameToPascalCase(t)
@@ -19,46 +23,42 @@ func BenchmarkConvertFileNameToSnakeCase(b *testing.B) {
 }
 
 func convertFileNameToPascalCase(tb testing.TB) {
-	cases := [][]string{
-		{"test_case", "TestCase"},
-		{"test-case", "TestCase"},
-		{"test.case", "TestCase"},
-		{"test", "Test"},
-		{"TestCase", "TestCase"},
-		{" test  case ", "TestCase"},
-		{"", ""},
-		{"many_many_words", "ManyManyWords"},
-		{"AnyKind of_string", "AnyKindOfString"},
-		{"numbers2And55with000", "Numbers2And55With000"},
-		{"JSONData", "JSONData"},
+	cases := Cases{
+		"":                     "",
+		"test_case":            "TestCase",
+		"test-case":            "TestCase",
+		"test.case":            "TestCase",
+		"test":                 "Test",
+		"TestCase":             "TestCase",
+		" test  case ":         "TestCase",
+		"many_many_words":      "ManyManyWords",
+		"AnyKind of_string":    "AnyKindOfString",
+		"numbers2And55with000": "Numbers2And55With000",
+		"JSONData":             "JSONData",
 	}
-	fileNameChecks(cases, tb, false)
+	runFileNameChecks(cases, tb, false)
 }
 
 func convertFileNameToSnakeCase(tb testing.TB) {
-	cases := [][]string{
-		{"", ""},
-		{"test_case", "test-case"},
-		{"test-case", "test-case"},
-		{"test.case", "test-case"},
-		{"test", "test"},
-		{"TestCase", "test-case"},
-		{" test  case ", "test-case"},
-		{"many_many_words", "many-many-words"},
-		{"AnyKind of_string", "any-kind-of-string"},
-		{"numbers2And55with000", "numbers-2-and-55-with-000"},
-		{"JSONData", "json-data"},
+	cases := Cases{
+		"":                     "",
+		"test_case":            "test-case",
+		"test-case":            "test-case",
+		"test.case":            "test-case",
+		"test":                 "test",
+		"TestCase":             "test-case",
+		" test  case ":         "test-case",
+		"many_many_words":      "many-many-words",
+		"AnyKind of_string":    "any-kind-of-string",
+		"numbers2And55with000": "numbers-2-and-55-with-000",
+		"JSONData":             "json-data",
 	}
-	fileNameChecks(cases, tb, true)
+	runFileNameChecks(cases, tb, true)
 }
 
-func fileNameChecks(cases [][]string, tb testing.TB, usesKebabCase bool) {
-	for _, index := range cases {
-		in := index[0]
-		out := index[1]
+func runFileNameChecks(cases Cases, tb testing.TB, usesKebabCase bool) {
+	for in, expected := range cases {
 		result := ConvertFileName(in, usesKebabCase)
-		if result != out {
-			tb.Errorf("%q (%q != %q)", in, result, out)
-		}
+		assert.EqualValues(tb, expected, result)
 	}
 }

@@ -6,7 +6,6 @@ import (
 	"github.com/mheob/create-react-tsx-component/generators/page"
 	"github.com/mheob/create-react-tsx-component/models"
 	"github.com/mheob/create-react-tsx-component/prompts"
-	"github.com/mheob/create-react-tsx-component/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -35,7 +34,7 @@ func pageCmdRun(cmd *cobra.Command, args []string) {
 
 	if interactive, _ := cmd.Flags().GetBool("interactive"); interactive != true {
 		if dest, _ := cmd.Flags().GetString("dest"); dest == "" {
-			models.CmdOptions.Dest = utils.GetWd() + "/pages"
+			models.CmdOptions.Dest = "./pages"
 		}
 
 		page.Run()

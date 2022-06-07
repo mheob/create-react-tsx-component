@@ -7,7 +7,6 @@ import (
 
 	"github.com/manifoldco/promptui"
 	"github.com/mheob/create-react-tsx-component/models"
-	"github.com/mheob/create-react-tsx-component/utils"
 )
 
 func TypePrompt() {
@@ -44,7 +43,7 @@ func NamePrompt() {
 func DestPrompt() {
 	prompt := promptui.Prompt{
 		Label:   fmt.Sprintf(`Where do you want to create the "%s"`, models.CmdOptions.Type),
-		Default: fmt.Sprintf("%s/%ss", utils.GetWd(), models.CmdOptions.Type),
+		Default: fmt.Sprintf("./%ss", models.CmdOptions.Type),
 	}
 
 	dest, err := prompt.Run()
@@ -59,7 +58,7 @@ func DestPrompt() {
 
 func UsesKebabCasePrompt() {
 	prompt := promptui.Select{
-		Label: "Do you want to use kebab-case for the filename names",
+		Label: "Do you want to use \"PascalCase\" for the filename names",
 		Items: []string{"Yes", "No"},
 	}
 
@@ -71,9 +70,9 @@ func UsesKebabCasePrompt() {
 	}
 
 	if usesKebabCase == "Yes" {
-		models.CmdOptions.UsesKebabCase = true
-	} else {
 		models.CmdOptions.UsesKebabCase = false
+	} else {
+		models.CmdOptions.UsesKebabCase = true
 	}
 }
 
