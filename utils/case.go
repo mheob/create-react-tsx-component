@@ -18,7 +18,7 @@ func ToKebabCase(str string) string {
 	return toDelimited(str, '-')
 }
 
-func toCamelCase(s string, initCase bool) string {
+func toCamelCase(s string, firstCase bool) string {
 	s = strings.TrimSpace(s)
 	if s == "" {
 		return s
@@ -26,7 +26,7 @@ func toCamelCase(s string, initCase bool) string {
 
 	builder := strings.Builder{}
 	builder.Grow(len(s))
-	capNext := initCase
+	capNext := firstCase
 
 	for i, char := range []byte(s) {
 		charIsCap := char >= 'A' && char <= 'Z'
@@ -59,7 +59,7 @@ func toCamelCase(s string, initCase bool) string {
 	return builder.String()
 }
 
-func toDelimited(s string, delimiter uint8) string {
+func toDelimited(s string, delimiter byte) string {
 	s = strings.TrimSpace(s)
 	if s == "" {
 		return s
@@ -69,7 +69,7 @@ func toDelimited(s string, delimiter uint8) string {
 	builder.Grow(len(s) + 2) // nominal 2 bytes of extra space for inserted delimiters
 
 	for i, char := range []byte(s) {
-		// treat acronyms as words, eg for JSONData -> JSON is a whole word
+		// treat acronyms as words, e.g. for JSONData -> JSON is a whole word
 		if i+1 < len(s) {
 			next := s[i+1]
 
