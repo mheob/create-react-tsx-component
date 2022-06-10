@@ -31,6 +31,7 @@ func Execute() {
 func init() {
 	// disable default help command
 	rootCmd.SetHelpCommand(&cobra.Command{Hidden: true})
+	rootCmd.PersistentFlags().BoolVar(&models.CmdOptions.OnlyDryRun, "dry-run", false, "print only the changes, but don't write to disk")
 }
 
 func rootCmdRun(cmd *cobra.Command, args []string) {
@@ -44,14 +45,11 @@ func rootCmdRun(cmd *cobra.Command, args []string) {
 		prompts.ShouldSkipStorybookPrompt()
 		prompts.ShouldSkipTestPrompt()
 		component.Run()
-		break
 	case "hook":
 		prompts.ShouldSkipTestPrompt()
 		hook.Run()
-		break
 	case "page":
 		page.Run()
-		break
 	default:
 		fmt.Println("Invalid choice")
 	}

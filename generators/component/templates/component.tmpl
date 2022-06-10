@@ -1,0 +1,11 @@
+{{if or (not .ShouldSkipStorybook) (not .ShouldSkipTest)}}export {{end}}type Props = {
+  title: string
+}
+
+export const {{.Name}} = ({ title }: Props): JSX.Element => {
+  return (
+    <div>{title}</div>
+  )
+}
+
+export default {{.Name}}

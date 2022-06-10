@@ -4,14 +4,30 @@ import (
 	"fmt"
 
 	"github.com/mheob/create-react-tsx-component/models"
-	"github.com/mheob/create-react-tsx-component/utils"
 )
 
+var vars = make(models.TmplVars)
+
 func Run() {
-	fmt.Println("Creating Component ...")
-	fmt.Println("Name:", utils.ConvertFileName(models.CmdOptions.Name, models.CmdOptions.UsesKebabCase))
-	fmt.Println("Destination:", models.CmdOptions.Dest)
-	fmt.Println("OnlyDryRun:", models.CmdOptions.OnlyDryRun)
-	fmt.Println("ShouldSkipStorybook:", models.CmdOptions.ShouldSkipStorybook)
-	fmt.Println("ShouldSkipTest:", models.CmdOptions.ShouldSkipTest)
+	models.CmdOptions.SetNames()
+
+	vars["Name"] = models.CmdOptions.ReactName
+	vars["FileName"] = models.CmdOptions.FileName
+	vars["ShouldSkipStorybook"] = models.CmdOptions.ShouldSkipStorybook
+	vars["ShouldSkipTest"] = models.CmdOptions.ShouldSkipTest
+
+	g := models.GenerateTemplate("Component")
+
+	// TODO: Generate asynchronous
+	g.GenerateFile("component.tmpl", vars)
+
+	if !models.CmdOptions.ShouldSkipStorybook {
+		fmt.Printf("---------------------------------\n\n")
+		g.GenerateFile("stories.tmpl", vars)
+	}
+
+	if !models.CmdOptions.ShouldSkipTest {
+		fmt.Printf("---------------------------------\n\n")
+		g.GenerateFile("test.tmpl", vars)
+	}
 }

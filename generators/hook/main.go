@@ -4,13 +4,19 @@ import (
 	"fmt"
 
 	"github.com/mheob/create-react-tsx-component/models"
-	"github.com/mheob/create-react-tsx-component/utils"
 )
 
 func Run() {
+	options := models.CmdOptions
+
+	options.SetNames()
+
+	// TODO: Remove the dummy output after the function is created
 	fmt.Println("Creating Hook ...")
-	fmt.Println("Name:", utils.ConvertFileName(models.CmdOptions.Name, models.CmdOptions.UsesKebabCase))
-	fmt.Println("Destination:", models.CmdOptions.Dest)
-	fmt.Println("OnlyDryRun:", models.CmdOptions.OnlyDryRun)
-	fmt.Println("ShouldSkipTest:", models.CmdOptions.ShouldSkipTest)
+	fmt.Println("Name:", options.Name)
+	fmt.Println("FileName:", options.FileName)
+	fmt.Println("ReactName:", options.ReactName)
+	fmt.Println("Destination:", options.Dest)
+	fmt.Println("OnlyDryRun:", options.OnlyDryRun)
+	fmt.Println("ShouldSkipTest:", options.ShouldSkipTest)
 }

@@ -23,7 +23,6 @@ func init() {
 	pageCmd.Flags().StringVarP(&models.CmdOptions.Dest, "dest", "d", "", "destination directory")
 	pageCmd.Flags().BoolP("interactive", "i", false, "use the simple interactive mode")
 	pageCmd.Flags().BoolVarP(&models.CmdOptions.UsesKebabCase, "kebab-case", "k", false, "use kebab-case instead of PascalCase for the filename")
-	pageCmd.Flags().BoolVar(&models.CmdOptions.OnlyDryRun, "dry-run", false, "print only the changes, but don't write to disk")
 
 	pageCmd.Flags().SortFlags = false
 }
@@ -32,7 +31,7 @@ func pageCmdRun(cmd *cobra.Command, args []string) {
 	models.CmdOptions.Type = "page"
 	models.CmdOptions.Name = strings.Join(args, " ")
 
-	if interactive, _ := cmd.Flags().GetBool("interactive"); interactive != true {
+	if interactive, _ := cmd.Flags().GetBool("interactive"); !interactive {
 		if dest, _ := cmd.Flags().GetString("dest"); dest == "" {
 			models.CmdOptions.Dest = "./pages"
 		}
