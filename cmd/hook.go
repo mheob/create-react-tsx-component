@@ -23,9 +23,6 @@ func init() {
 
 	rootCmd.AddCommand(hookCmd)
 
-	hookCmd.Flags().StringVarP(&hookOpt.Dest, "dest", "d", "", "destination directory")
-	hookCmd.Flags().BoolP("interactive", "i", false, "use the simple interactive mode")
-	hookCmd.Flags().BoolVarP(&hookOpt.UsesKebabCase, "kebab-case", "k", false, "use kebab-case instead of PascalCase for the filename")
 	hookCmd.Flags().BoolVarP(&hookOpt.WithTest, "with-test", "t", false, "create a unit test file")
 
 	hookCmd.Flags().SortFlags = false
@@ -35,19 +32,23 @@ func hookCmdRun(cmd *cobra.Command, args []string) {
 	hookOpt.Type = "hook"
 	hookOpt.Name = strings.Join(args, " ")
 
-	if interactive, _ := cmd.Flags().GetBool("interactive"); !interactive {
-		if dest, _ := cmd.Flags().GetString("dest"); dest == "" {
-			hookOpt.Dest = "./hooks"
-		}
+	if interactive, _ := cmd.Flags().GetBool("interactive"); interactive {
+		prompts.NamePrompt(hookOpt)
+		prompts.DestPrompt(hookOpt)
+		prompts.UsesKebabCasePrompt(hookOpt)
+		prompts.WithTestPrompt(hookOpt)
 
 		PrepareHookGeneration(hookOpt)
 		return
 	}
 
-	prompts.NamePrompt(hookOpt)
-	prompts.DestPrompt(hookOpt)
-	prompts.UsesKebabCasePrompt(hookOpt)
-	prompts.WithTestPrompt(hookOpt)
+	if dest, _ := cmd.Flags().GetString("dest"); dest == "" {
+		hookOpt.Dest = "./hooks"
+	}
+
+	if usesKebabCase, _ := cmd.Flags().GetBool("kebab-case"); usesKebabCase {
+		hookOpt.UsesKebabCase = usesKebabCase
+	}
 
 	PrepareHookGeneration(hookOpt)
 }

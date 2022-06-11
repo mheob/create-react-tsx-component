@@ -23,10 +23,6 @@ func init() {
 
 	rootCmd.AddCommand(pageCmd)
 
-	pageCmd.Flags().StringVarP(&pageOpt.Dest, "dest", "d", "", "destination directory")
-	pageCmd.Flags().BoolP("interactive", "i", false, "use the simple interactive mode")
-	pageCmd.Flags().BoolVarP(&pageOpt.UsesKebabCase, "kebab-case", "k", false, "use kebab-case instead of PascalCase for the filename")
-
 	pageCmd.Flags().SortFlags = false
 }
 
@@ -34,18 +30,22 @@ func pageCmdRun(cmd *cobra.Command, args []string) {
 	pageOpt.Type = "page"
 	pageOpt.Name = strings.Join(args, " ")
 
-	if interactive, _ := cmd.Flags().GetBool("interactive"); !interactive {
-		if dest, _ := cmd.Flags().GetString("dest"); dest == "" {
-			pageOpt.Dest = "./pages"
-		}
+	if interactive, _ := cmd.Flags().GetBool("interactive"); interactive {
+		prompts.NamePrompt(pageOpt)
+		prompts.DestPrompt(pageOpt)
+		prompts.UsesKebabCasePrompt(pageOpt)
 
 		PreparePageGeneration(pageOpt)
 		return
 	}
 
-	prompts.NamePrompt(pageOpt)
-	prompts.DestPrompt(pageOpt)
-	prompts.UsesKebabCasePrompt(pageOpt)
+	if dest, _ := cmd.Flags().GetString("dest"); dest == "" {
+		pageOpt.Dest = "./pages"
+	}
+
+	if usesKebabCase, _ := cmd.Flags().GetBool("kebab-case"); usesKebabCase {
+		pageOpt.UsesKebabCase = usesKebabCase
+	}
 
 	PreparePageGeneration(pageOpt)
 }

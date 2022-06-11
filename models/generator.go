@@ -31,34 +31,37 @@ func (g *Generator) GenerateFiles(files []string) {
 }
 
 func (g *Generator) generateFile(file string) {
-	var extension string
-	switch file {
-	case "stories":
-		extension = ".stories.tsx"
-	case "test":
-		extension = ".test.tsx"
-	default:
-		extension = ".tsx"
-	}
-
 	err := os.MkdirAll(g.dest, 0750)
 	check(err)
 
 	tmplFile, err := template.ParseFiles(path.Join(g.tmplPath, file+".tmpl"))
 	check(err)
 
-	fileName := g.options.FileName + extension
+	// TODO: Add check if dest already exists and prompt a "are you sure" question
+
+	fileName := g.options.FileName
 	if file == "index" {
-		fileName = file + extension
+		fileName = file
 	}
 
-	f, err := os.Create(path.Join(g.dest, fileName))
+	f, err := os.Create(path.Join(g.dest, fileName+getExtension(file)))
 	check(err)
 	//goland:noinspection GoUnhandledErrorResult
 	defer f.Close()
 
 	err = tmplFile.Execute(f, g.vars)
 	check(err)
+}
+
+func getExtension(file string) string {
+	switch file {
+	case "stories":
+		return ".stories.tsx"
+	case "test":
+		return ".test.tsx"
+	default:
+		return ".tsx"
+	}
 }
 
 func check(err error) {

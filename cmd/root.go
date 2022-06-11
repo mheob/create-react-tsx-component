@@ -32,7 +32,12 @@ func init() {
 
 	// disable default help command
 	rootCmd.SetHelpCommand(&cobra.Command{Hidden: true})
+	rootCmd.PersistentFlags().StringVarP(&rootOpt.Dest, "dest", "d", "", "destination directory")
+	rootCmd.PersistentFlags().BoolP("interactive", "i", false, "use the simple interactive mode")
+	rootCmd.PersistentFlags().BoolVarP(&rootOpt.UsesKebabCase, "kebab-case", "k", false, "use kebab-case instead of PascalCase for the filename")
 	rootCmd.PersistentFlags().BoolVar(&rootOpt.OnlyDryRun, "dry-run", false, "print only the changes, but don't write to disk")
+
+	rootCmd.PersistentFlags().SortFlags = false
 }
 
 func rootCmdRun(cmd *cobra.Command, args []string) {

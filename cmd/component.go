@@ -23,9 +23,6 @@ func init() {
 
 	rootCmd.AddCommand(componentCmd)
 
-	componentCmd.Flags().StringVarP(&componentOpt.Dest, "dest", "d", "", "destination directory")
-	componentCmd.Flags().BoolP("interactive", "i", false, "use the simple interactive mode")
-	componentCmd.Flags().BoolVarP(&componentOpt.UsesKebabCase, "kebab-case", "k", false, "use kebab-case instead of PascalCase for the filename")
 	componentCmd.Flags().BoolVarP(&componentOpt.WithStorybook, "with-storybook", "s", false, "create a storybook stories file")
 	componentCmd.Flags().BoolVarP(&componentOpt.WithTest, "with-test", "t", false, "create a unit test file")
 
@@ -36,20 +33,24 @@ func componentCmdRun(cmd *cobra.Command, args []string) {
 	componentOpt.Type = "component"
 	componentOpt.Name = strings.Join(args, " ")
 
-	if interactive, _ := cmd.Flags().GetBool("interactive"); !interactive {
-		if dest, _ := cmd.Flags().GetString("dest"); dest == "" {
-			componentOpt.Dest = "./components"
-		}
+	if interactive, _ := cmd.Flags().GetBool("interactive"); interactive {
+		prompts.NamePrompt(componentOpt)
+		prompts.DestPrompt(componentOpt)
+		prompts.UsesKebabCasePrompt(componentOpt)
+		prompts.WithStorybookPrompt(componentOpt)
+		prompts.WithTestPrompt(componentOpt)
 
 		PrepareComponentGeneration(componentOpt)
 		return
 	}
 
-	prompts.NamePrompt(componentOpt)
-	prompts.DestPrompt(componentOpt)
-	prompts.UsesKebabCasePrompt(componentOpt)
-	prompts.WithStorybookPrompt(componentOpt)
-	prompts.WithTestPrompt(componentOpt)
+	if dest, _ := cmd.Flags().GetString("dest"); dest == "" {
+		componentOpt.Dest = "./components"
+	}
+
+	if usesKebabCase, _ := cmd.Flags().GetBool("kebab-case"); usesKebabCase {
+		componentOpt.UsesKebabCase = usesKebabCase
+	}
 
 	PrepareComponentGeneration(componentOpt)
 }
