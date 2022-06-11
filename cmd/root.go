@@ -4,9 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/mheob/create-react-tsx-component/generators/component"
-	"github.com/mheob/create-react-tsx-component/generators/hook"
-	"github.com/mheob/create-react-tsx-component/generators/page"
 	"github.com/mheob/create-react-tsx-component/models"
 	"github.com/mheob/create-react-tsx-component/prompts"
 	"github.com/spf13/cobra"
@@ -48,12 +45,12 @@ func rootCmdRun(cmd *cobra.Command, args []string) {
 	case "component":
 		prompts.WithStorybookPrompt(rootOpt)
 		prompts.WithTestPrompt(rootOpt)
-		component.Run(rootOpt)
+		PrepareComponentGeneration(rootOpt)
 	case "hook":
 		prompts.WithTestPrompt(rootOpt)
-		hook.Run(rootOpt)
+		PrepareHookGeneration(rootOpt)
 	case "page":
-		page.Run(rootOpt)
+		PreparePageGeneration(rootOpt)
 	default:
 		fmt.Println("Invalid choice")
 	}

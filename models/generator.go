@@ -16,11 +16,9 @@ type Generator struct {
 }
 
 func NewGenerator(cmdType string, opt *CmdOptionsModel, vars TmplVars) *Generator {
-	wd, err := os.Getwd()
-	check(err)
+	wd, _ := os.Getwd()
 	destPath := path.Join(wd, opt.Dest, opt.FileName)
-
-	tmplPath := path.Join("generators", cmdType, "templates")
+	tmplPath := path.Join("templates", cmdType)
 
 	return &Generator{tmplPath: tmplPath, dest: destPath, vars: vars, options: opt}
 }

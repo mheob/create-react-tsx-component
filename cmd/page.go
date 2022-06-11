@@ -3,7 +3,6 @@ package cmd
 import (
 	"strings"
 
-	"github.com/mheob/create-react-tsx-component/generators/page"
 	"github.com/mheob/create-react-tsx-component/models"
 	"github.com/mheob/create-react-tsx-component/prompts"
 	"github.com/spf13/cobra"
@@ -40,7 +39,7 @@ func pageCmdRun(cmd *cobra.Command, args []string) {
 			pageOpt.Dest = "./pages"
 		}
 
-		page.Run(pageOpt)
+		PreparePageGeneration(pageOpt)
 		return
 	}
 
@@ -48,5 +47,29 @@ func pageCmdRun(cmd *cobra.Command, args []string) {
 	prompts.DestPrompt(pageOpt)
 	prompts.UsesKebabCasePrompt(pageOpt)
 
-	page.Run(pageOpt)
+	PreparePageGeneration(pageOpt)
+}
+
+func PreparePageGeneration(opt *models.CmdOptionsModel) {
+	opt.SetNames()
+
+	var vars = make(models.TmplVars)
+	vars["Name"] = opt.ReactName
+	vars["FileName"] = opt.FileName
+	vars["WithTest"] = opt.WithTest
+
+	g := models.NewGenerator("component", opt, vars)
+
+	files := make([]string, 1, 3)
+	files[0] = "component"
+
+	if opt.WithStorybook {
+		files = append(files, "stories")
+	}
+
+	if opt.WithTest {
+		files = append(files, "test")
+	}
+
+	g.GenerateFiles(files)
 }

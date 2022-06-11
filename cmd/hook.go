@@ -3,7 +3,6 @@ package cmd
 import (
 	"strings"
 
-	"github.com/mheob/create-react-tsx-component/generators/hook"
 	"github.com/mheob/create-react-tsx-component/models"
 	"github.com/mheob/create-react-tsx-component/prompts"
 	"github.com/spf13/cobra"
@@ -41,7 +40,7 @@ func hookCmdRun(cmd *cobra.Command, args []string) {
 			hookOpt.Dest = "./hooks"
 		}
 
-		hook.Run(hookOpt)
+		PrepareHookGeneration(hookOpt)
 		return
 	}
 
@@ -50,5 +49,29 @@ func hookCmdRun(cmd *cobra.Command, args []string) {
 	prompts.UsesKebabCasePrompt(hookOpt)
 	prompts.WithTestPrompt(hookOpt)
 
-	hook.Run(hookOpt)
+	PrepareHookGeneration(hookOpt)
+}
+
+func PrepareHookGeneration(opt *models.CmdOptionsModel) {
+	opt.SetNames()
+
+	var vars = make(models.TmplVars)
+	vars["Name"] = opt.ReactName
+	vars["FileName"] = opt.FileName
+	vars["WithTest"] = opt.WithTest
+
+	g := models.NewGenerator("component", opt, vars)
+
+	files := make([]string, 1, 3)
+	files[0] = "component"
+
+	if opt.WithStorybook {
+		files = append(files, "stories")
+	}
+
+	if opt.WithTest {
+		files = append(files, "test")
+	}
+
+	g.GenerateFiles(files)
 }
