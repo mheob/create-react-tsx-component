@@ -17,34 +17,38 @@ var hookCmd = &cobra.Command{
 	Run:   hookCmdRun,
 }
 
+var hookOpt *models.CmdOptionsModel
+
 func init() {
+	hookOpt = models.NewCmdOptions()
+
 	rootCmd.AddCommand(hookCmd)
 
-	hookCmd.Flags().StringVarP(&models.CmdOptions.Dest, "dest", "d", "", "destination directory")
+	hookCmd.Flags().StringVarP(&hookOpt.Dest, "dest", "d", "", "destination directory")
 	hookCmd.Flags().BoolP("interactive", "i", false, "use the simple interactive mode")
-	hookCmd.Flags().BoolVarP(&models.CmdOptions.UsesKebabCase, "kebab-case", "k", false, "use kebab-case instead of PascalCase for the filename")
-	hookCmd.Flags().BoolVarP(&models.CmdOptions.ShouldSkipTest, "no-test", "t", false, "don't create a unit test file")
+	hookCmd.Flags().BoolVarP(&hookOpt.UsesKebabCase, "kebab-case", "k", false, "use kebab-case instead of PascalCase for the filename")
+	hookCmd.Flags().BoolVarP(&hookOpt.WithTest, "with-test", "t", false, "create a unit test file")
 
 	hookCmd.Flags().SortFlags = false
 }
 
 func hookCmdRun(cmd *cobra.Command, args []string) {
-	models.CmdOptions.Type = "hook"
-	models.CmdOptions.Name = strings.Join(args, " ")
+	hookOpt.Type = "hook"
+	hookOpt.Name = strings.Join(args, " ")
 
 	if interactive, _ := cmd.Flags().GetBool("interactive"); !interactive {
 		if dest, _ := cmd.Flags().GetString("dest"); dest == "" {
-			models.CmdOptions.Dest = "./hooks"
+			hookOpt.Dest = "./hooks"
 		}
 
-		hook.Run()
+		hook.Run(hookOpt)
 		return
 	}
 
-	prompts.NamePrompt()
-	prompts.DestPrompt()
-	prompts.UsesKebabCasePrompt()
-	prompts.ShouldSkipTestPrompt()
+	prompts.NamePrompt(hookOpt)
+	prompts.DestPrompt(hookOpt)
+	prompts.UsesKebabCasePrompt(hookOpt)
+	prompts.WithTestPrompt(hookOpt)
 
-	hook.Run()
+	hook.Run(hookOpt)
 }

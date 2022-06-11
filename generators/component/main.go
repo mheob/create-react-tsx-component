@@ -1,33 +1,30 @@
 package component
 
 import (
-	"fmt"
-
 	"github.com/mheob/create-react-tsx-component/models"
 )
 
 var vars = make(models.TmplVars)
 
-func Run() {
-	models.CmdOptions.SetNames()
+func Run(opt *models.CmdOptionsModel) {
+	opt.SetNames()
 
-	vars["Name"] = models.CmdOptions.ReactName
-	vars["FileName"] = models.CmdOptions.FileName
-	vars["ShouldSkipStorybook"] = models.CmdOptions.ShouldSkipStorybook
-	vars["ShouldSkipTest"] = models.CmdOptions.ShouldSkipTest
+	vars["Name"] = opt.ReactName
+	vars["FileName"] = opt.FileName
+	vars["WithTest"] = opt.WithTest
 
-	g := models.GenerateTemplate("Component")
+	g := models.NewGenerator("component", opt, vars)
 
-	// TODO: Generate asynchronous
-	g.GenerateFile("component.tmpl", vars)
+	files := make([]string, 1, 3)
+	files[0] = "component"
 
-	if !models.CmdOptions.ShouldSkipStorybook {
-		fmt.Printf("---------------------------------\n\n")
-		g.GenerateFile("stories.tmpl", vars)
+	if opt.WithStorybook {
+		files = append(files, "stories")
 	}
 
-	if !models.CmdOptions.ShouldSkipTest {
-		fmt.Printf("---------------------------------\n\n")
-		g.GenerateFile("test.tmpl", vars)
+	if opt.WithTest {
+		files = append(files, "test")
 	}
+
+	g.GenerateFiles(files)
 }

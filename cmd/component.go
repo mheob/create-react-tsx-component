@@ -17,36 +17,40 @@ var componentCmd = &cobra.Command{
 	Run:   componentCmdRun,
 }
 
+var componentOpt *models.CmdOptionsModel
+
 func init() {
+	componentOpt = models.NewCmdOptions()
+
 	rootCmd.AddCommand(componentCmd)
 
-	componentCmd.Flags().StringVarP(&models.CmdOptions.Dest, "dest", "d", "", "destination directory")
+	componentCmd.Flags().StringVarP(&componentOpt.Dest, "dest", "d", "", "destination directory")
 	componentCmd.Flags().BoolP("interactive", "i", false, "use the simple interactive mode")
-	componentCmd.Flags().BoolVarP(&models.CmdOptions.UsesKebabCase, "kebab-case", "k", false, "use kebab-case instead of PascalCase for the filename")
-	componentCmd.Flags().BoolVarP(&models.CmdOptions.ShouldSkipStorybook, "no-storybook", "s", false, "don't create a storybook stories file")
-	componentCmd.Flags().BoolVarP(&models.CmdOptions.ShouldSkipTest, "no-test", "t", false, "don't create a unit test file")
+	componentCmd.Flags().BoolVarP(&componentOpt.UsesKebabCase, "kebab-case", "k", false, "use kebab-case instead of PascalCase for the filename")
+	componentCmd.Flags().BoolVarP(&componentOpt.WithStorybook, "with-storybook", "s", false, "create a storybook stories file")
+	componentCmd.Flags().BoolVarP(&componentOpt.WithTest, "with-test", "t", false, "create a unit test file")
 
 	componentCmd.Flags().SortFlags = false
 }
 
 func componentCmdRun(cmd *cobra.Command, args []string) {
-	models.CmdOptions.Type = "component"
-	models.CmdOptions.Name = strings.Join(args, " ")
+	componentOpt.Type = "component"
+	componentOpt.Name = strings.Join(args, " ")
 
 	if interactive, _ := cmd.Flags().GetBool("interactive"); !interactive {
 		if dest, _ := cmd.Flags().GetString("dest"); dest == "" {
-			models.CmdOptions.Dest = "./components"
+			componentOpt.Dest = "./components"
 		}
 
-		component.Run()
+		component.Run(componentOpt)
 		return
 	}
 
-	prompts.NamePrompt()
-	prompts.DestPrompt()
-	prompts.UsesKebabCasePrompt()
-	prompts.ShouldSkipStorybookPrompt()
-	prompts.ShouldSkipTestPrompt()
+	prompts.NamePrompt(componentOpt)
+	prompts.DestPrompt(componentOpt)
+	prompts.UsesKebabCasePrompt(componentOpt)
+	prompts.WithStorybookPrompt(componentOpt)
+	prompts.WithTestPrompt(componentOpt)
 
-	component.Run()
+	component.Run(componentOpt)
 }

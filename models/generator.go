@@ -1,45 +1,70 @@
 package models
 
 import (
-	"bytes"
-	"fmt"
+	"os"
 	"path"
-	"sync"
 	"text/template"
 )
 
-type TmplVars map[string]interface{}
+type TmplVars map[string]any
 
 type Generator struct {
-	mutex    *sync.Mutex
 	tmplPath string
-	Vars     TmplVars
+	dest     string
+	vars     TmplVars
+	options  *CmdOptionsModel
 }
 
-func GenerateTemplate(cmdType string) *Generator {
+func NewGenerator(cmdType string, opt *CmdOptionsModel, vars TmplVars) *Generator {
+	wd, err := os.Getwd()
+	check(err)
+	destPath := path.Join(wd, opt.Dest, opt.FileName)
+
 	tmplPath := path.Join("generators", cmdType, "templates")
-	return &Generator{mutex: &sync.Mutex{}, tmplPath: tmplPath}
+
+	return &Generator{tmplPath: tmplPath, dest: destPath, vars: vars, options: opt}
 }
 
-func (g *Generator) GenerateFile(file string, vars TmplVars) {
-	g.mutex.Lock()
+func (g *Generator) GenerateFiles(files []string) {
+	for _, file := range files {
+		g.generateFile(file)
+	}
+	g.generateFile("index")
+}
 
-	tmplFile, err := template.ParseFiles(path.Join(g.tmplPath, file))
+func (g *Generator) generateFile(file string) {
+	var extension string
+	switch file {
+	case "stories":
+		extension = ".stories.tsx"
+	case "test":
+		extension = ".test.tsx"
+	default:
+		extension = ".tsx"
+	}
+
+	err := os.MkdirAll(g.dest, 0750)
+	check(err)
+
+	tmplFile, err := template.ParseFiles(path.Join(g.tmplPath, file+".tmpl"))
+	check(err)
+
+	fileName := g.options.FileName + extension
+	if file == "index" {
+		fileName = file + extension
+	}
+
+	f, err := os.Create(path.Join(g.dest, fileName))
+	check(err)
+	//goland:noinspection GoUnhandledErrorResult
+	defer f.Close()
+
+	err = tmplFile.Execute(f, g.vars)
+	check(err)
+}
+
+func check(err error) {
 	if err != nil {
 		panic(err)
 	}
-
-	var tmpl bytes.Buffer
-
-	err = tmplFile.Execute(&tmpl, vars)
-	if err != nil {
-		panic(err)
-	}
-
-	newFile := tmpl.String()
-
-	// TODO: Create files
-	fmt.Println(newFile)
-
-	g.mutex.Unlock()
 }

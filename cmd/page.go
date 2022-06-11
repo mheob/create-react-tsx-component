@@ -17,32 +17,36 @@ var pageCmd = &cobra.Command{
 	Run:   pageCmdRun,
 }
 
+var pageOpt *models.CmdOptionsModel
+
 func init() {
+	pageOpt = models.NewCmdOptions()
+
 	rootCmd.AddCommand(pageCmd)
 
-	pageCmd.Flags().StringVarP(&models.CmdOptions.Dest, "dest", "d", "", "destination directory")
+	pageCmd.Flags().StringVarP(&pageOpt.Dest, "dest", "d", "", "destination directory")
 	pageCmd.Flags().BoolP("interactive", "i", false, "use the simple interactive mode")
-	pageCmd.Flags().BoolVarP(&models.CmdOptions.UsesKebabCase, "kebab-case", "k", false, "use kebab-case instead of PascalCase for the filename")
+	pageCmd.Flags().BoolVarP(&pageOpt.UsesKebabCase, "kebab-case", "k", false, "use kebab-case instead of PascalCase for the filename")
 
 	pageCmd.Flags().SortFlags = false
 }
 
 func pageCmdRun(cmd *cobra.Command, args []string) {
-	models.CmdOptions.Type = "page"
-	models.CmdOptions.Name = strings.Join(args, " ")
+	pageOpt.Type = "page"
+	pageOpt.Name = strings.Join(args, " ")
 
 	if interactive, _ := cmd.Flags().GetBool("interactive"); !interactive {
 		if dest, _ := cmd.Flags().GetString("dest"); dest == "" {
-			models.CmdOptions.Dest = "./pages"
+			pageOpt.Dest = "./pages"
 		}
 
-		page.Run()
+		page.Run(pageOpt)
 		return
 	}
 
-	prompts.NamePrompt()
-	prompts.DestPrompt()
-	prompts.UsesKebabCasePrompt()
+	prompts.NamePrompt(pageOpt)
+	prompts.DestPrompt(pageOpt)
+	prompts.UsesKebabCasePrompt(pageOpt)
 
-	page.Run()
+	page.Run(pageOpt)
 }

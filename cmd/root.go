@@ -21,6 +21,8 @@ var rootCmd = &cobra.Command{
 	Run:               rootCmdRun,
 }
 
+var rootOpt *models.CmdOptionsModel
+
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
@@ -29,27 +31,29 @@ func Execute() {
 }
 
 func init() {
+	rootOpt = models.NewCmdOptions()
+
 	// disable default help command
 	rootCmd.SetHelpCommand(&cobra.Command{Hidden: true})
-	rootCmd.PersistentFlags().BoolVar(&models.CmdOptions.OnlyDryRun, "dry-run", false, "print only the changes, but don't write to disk")
+	rootCmd.PersistentFlags().BoolVar(&rootOpt.OnlyDryRun, "dry-run", false, "print only the changes, but don't write to disk")
 }
 
 func rootCmdRun(cmd *cobra.Command, args []string) {
-	prompts.TypePrompt()
-	prompts.NamePrompt()
-	prompts.DestPrompt()
-	prompts.UsesKebabCasePrompt()
+	prompts.TypePrompt(rootOpt)
+	prompts.NamePrompt(rootOpt)
+	prompts.DestPrompt(rootOpt)
+	prompts.UsesKebabCasePrompt(rootOpt)
 
-	switch models.CmdOptions.Type {
+	switch rootOpt.Type {
 	case "component":
-		prompts.ShouldSkipStorybookPrompt()
-		prompts.ShouldSkipTestPrompt()
-		component.Run()
+		prompts.WithStorybookPrompt(rootOpt)
+		prompts.WithTestPrompt(rootOpt)
+		component.Run(rootOpt)
 	case "hook":
-		prompts.ShouldSkipTestPrompt()
-		hook.Run()
+		prompts.WithTestPrompt(rootOpt)
+		hook.Run(rootOpt)
 	case "page":
-		page.Run()
+		page.Run(rootOpt)
 	default:
 		fmt.Println("Invalid choice")
 	}

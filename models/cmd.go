@@ -7,19 +7,21 @@ type CmdOptionsModel struct {
 
 	Name string
 
-	Dest                string
-	OnlyDryRun          bool
-	UsesKebabCase       bool
-	ShouldSkipStorybook bool
-	ShouldSkipTest      bool
+	Dest          string
+	OnlyDryRun    bool
+	UsesKebabCase bool
+	WithStorybook bool
+	WithTest      bool
 
 	FileName  string
 	ReactName string
+}
+
+func NewCmdOptions() *CmdOptionsModel {
+	return &CmdOptionsModel{}
 }
 
 func (m *CmdOptionsModel) SetNames() {
 	m.FileName = utils.ConvertFileName(m.Name, m.UsesKebabCase)
 	m.ReactName = utils.ToPascalCase(m.Name)
 }
-
-var CmdOptions = new(CmdOptionsModel)

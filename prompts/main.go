@@ -9,7 +9,7 @@ import (
 	"github.com/mheob/create-react-tsx-component/models"
 )
 
-func TypePrompt() {
+func TypePrompt(opt *models.CmdOptionsModel) {
 	prompt := promptui.Select{
 		Label: "What type of component do you want to create",
 		Items: []string{"Component", "Hook", "Page"},
@@ -22,10 +22,10 @@ func TypePrompt() {
 		os.Exit(1)
 	}
 
-	models.CmdOptions.Type = strings.ToLower(typeChoice)
+	opt.Type = strings.ToLower(typeChoice)
 }
 
-func NamePrompt() {
+func NamePrompt(opt *models.CmdOptionsModel) {
 	prompt := promptui.Prompt{
 		Label: "What is the name of the component",
 	}
@@ -37,13 +37,13 @@ func NamePrompt() {
 		os.Exit(1)
 	}
 
-	models.CmdOptions.Name = name
+	opt.Name = name
 }
 
-func DestPrompt() {
+func DestPrompt(opt *models.CmdOptionsModel) {
 	prompt := promptui.Prompt{
-		Label:   fmt.Sprintf(`Where do you want to create the "%s"`, models.CmdOptions.Type),
-		Default: fmt.Sprintf("./%ss", models.CmdOptions.Type),
+		Label:   fmt.Sprintf(`Where do you want to create the "%s"`, opt.Type),
+		Default: fmt.Sprintf("./%ss", opt.Type),
 	}
 
 	dest, err := prompt.Run()
@@ -53,10 +53,10 @@ func DestPrompt() {
 		os.Exit(1)
 	}
 
-	models.CmdOptions.Dest = dest
+	opt.Dest = dest
 }
 
-func UsesKebabCasePrompt() {
+func UsesKebabCasePrompt(opt *models.CmdOptionsModel) {
 	prompt := promptui.Select{
 		Label: "Do you want to use \"PascalCase\" for the filename names",
 		Items: []string{"Yes", "No"},
@@ -70,13 +70,13 @@ func UsesKebabCasePrompt() {
 	}
 
 	if usesKebabCase == "Yes" {
-		models.CmdOptions.UsesKebabCase = false
+		opt.UsesKebabCase = false
 	} else {
-		models.CmdOptions.UsesKebabCase = true
+		opt.UsesKebabCase = true
 	}
 }
 
-func ShouldSkipTestPrompt() {
+func WithTestPrompt(opt *models.CmdOptionsModel) {
 	prompt := promptui.Select{
 		Label: "Do you want to create a test file",
 		Items: []string{"Yes", "No"},
@@ -90,13 +90,13 @@ func ShouldSkipTestPrompt() {
 	}
 
 	if shouldSkipTest == "Yes" {
-		models.CmdOptions.ShouldSkipTest = false
+		opt.WithTest = true
 	} else {
-		models.CmdOptions.ShouldSkipTest = true
+		opt.WithTest = false
 	}
 }
 
-func ShouldSkipStorybookPrompt() {
+func WithStorybookPrompt(opt *models.CmdOptionsModel) {
 	prompt := promptui.Select{
 		Label: "Do you want to create a stories file",
 		Items: []string{"Yes", "No"},
@@ -110,9 +110,9 @@ func ShouldSkipStorybookPrompt() {
 	}
 
 	if shouldSkipStorybook == "Yes" {
-		models.CmdOptions.ShouldSkipStorybook = false
+		opt.WithStorybook = true
 	} else {
-		models.CmdOptions.ShouldSkipStorybook = true
+		opt.WithStorybook = false
 	}
 }
 
