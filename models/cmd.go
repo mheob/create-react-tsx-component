@@ -17,11 +17,11 @@ type CmdOptionsModel struct {
 	ReactName string
 }
 
-func NewCmdOptions() *CmdOptionsModel {
-	return &CmdOptionsModel{}
-}
-
 func (m *CmdOptionsModel) SetNames() {
 	m.FileName = utils.ConvertFileName(m.Name, m.UsesKebabCase)
 	m.ReactName = utils.ToPascalCase(m.Name)
+}
+
+func NewCmdOptions() *CmdOptionsModel {
+	return &CmdOptionsModel{}
 }

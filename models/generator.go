@@ -15,14 +15,6 @@ type Generator struct {
 	options  *CmdOptionsModel
 }
 
-func NewGenerator(cmdType string, opt *CmdOptionsModel, vars TmplVars) *Generator {
-	wd, _ := os.Getwd()
-	destPath := path.Join(wd, opt.Dest, opt.FileName)
-	tmplPath := path.Join("templates", cmdType)
-
-	return &Generator{tmplPath: tmplPath, dest: destPath, vars: vars, options: opt}
-}
-
 func (g *Generator) GenerateFiles(files []string) {
 	createDir(g.dest)
 
@@ -51,6 +43,19 @@ func (g *Generator) generateFile(file string) {
 
 	err = tmplFile.Execute(f, g.vars)
 	check(err)
+}
+
+func NewGenerator(cmdType string, opt *CmdOptionsModel, vars TmplVars) *Generator {
+	wd, _ := os.Getwd()
+	destPath := path.Join(wd, opt.Dest, opt.FileName)
+	tmplPath := path.Join("templates", cmdType)
+
+	return &Generator{
+		tmplPath: tmplPath,
+		dest:     destPath,
+		vars:     vars,
+		options:  opt,
+	}
 }
 
 func createDir(dirName string) {
