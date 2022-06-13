@@ -27,7 +27,7 @@ func ConvertFileName(name string, usesKebabCase bool) string {
 }
 
 func toCamelCase(str string, isUpperFirstChar bool) string {
-	str = strings.TrimSpace(str)
+	str = strings.Trim(str, " _-.")
 	if str == "" {
 		return str
 	}
@@ -68,7 +68,7 @@ func toCamelCase(str string, isUpperFirstChar bool) string {
 }
 
 func toDelimited(str string, delimiter byte) string {
-	str = strings.TrimSpace(str)
+	str = strings.Trim(str, " _-.")
 	if str == "" {
 		return str
 	}
