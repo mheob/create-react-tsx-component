@@ -80,13 +80,13 @@ func createDir(dirName string) {
 		check(err)
 	}
 
-	if err := os.MkdirAll(dirName, 0755); err != nil {
-		panic(err)
-	}
+	err := os.MkdirAll(dirName, 0755)
+	check(err)
 }
 
 func check(err error) {
 	if err != nil {
+		fmt.Println("An error occurred:")
 		panic(err)
 	}
 }
