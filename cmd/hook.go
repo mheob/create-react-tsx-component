@@ -42,7 +42,7 @@ func hookCmdRun(cmd *cobra.Command, args []string) {
 	}
 
 	if dest, _ := cmd.Flags().GetString("dest"); dest == "" {
-		hookOpt.Dest = "./hooks"
+		hookOpt.Dest = "./src/hooks"
 	}
 
 	if usesKebabCase, _ := cmd.Flags().GetBool("kebab-case"); usesKebabCase {
@@ -58,19 +58,14 @@ func PrepareHookGeneration(opt *models.CmdOptionsModel) {
 	var vars = make(models.TmplVars)
 	vars["Name"] = opt.ReactName
 	vars["FileName"] = opt.FileName
-	vars["WithTest"] = opt.WithTest
 
-	g := models.NewGenerator("component", opt, vars)
+	g := models.NewGenerator("hook", opt, vars)
 
-	files := make([]string, 1, 3)
-	files[0] = "component"
-
-	if opt.WithStorybook {
-		files = append(files, "stories")
-	}
+	files := make([]models.File, 1, 2)
+	files[0] = models.File{Name: "hook", Extension: ".tsx"}
 
 	if opt.WithTest {
-		files = append(files, "test")
+		files = append(files, models.File{Name: "test", Extension: ".test.ts"})
 	}
 
 	g.GenerateFiles(files)

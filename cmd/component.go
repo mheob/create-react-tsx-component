@@ -64,15 +64,15 @@ func PrepareComponentGeneration(opt *models.CmdOptionsModel) {
 
 	g := models.NewGenerator("component", opt, vars)
 
-	files := make([]string, 1, 3)
-	files[0] = "component"
+	files := make([]models.File, 1, 3)
+	files[0] = models.File{Name: "component", Extension: ".tsx"}
 
 	if opt.WithStorybook {
-		files = append(files, "stories")
+		files = append(files, models.File{Name: "stories", Extension: ".stories.tsx"})
 	}
 
 	if opt.WithTest {
-		files = append(files, "test")
+		files = append(files, models.File{Name: "test", Extension: ".test.tsx"})
 	}
 
 	g.GenerateFiles(files)

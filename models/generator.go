@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"os"
 	"path"
 	"text/template"
@@ -8,23 +9,32 @@ import (
 
 type TmplVars map[string]any
 
+type File struct {
+	Name      string
+	Extension string
+}
+
 type Generator struct {
+	tmplType string
 	tmplPath string
 	dest     string
 	vars     TmplVars
 	options  *CmdOptionsModel
 }
 
-func (g *Generator) GenerateFiles(files []string) {
+func (g *Generator) GenerateFiles(files []File) {
 	createDir(g.dest)
 
 	for _, file := range files {
-		g.generateFile(file)
+		g.generateFile(file.Name, file.Extension)
 	}
-	g.generateFile("index")
+
+	if g.tmplType != "page" {
+		g.generateFile("index", ".ts")
+	}
 }
 
-func (g *Generator) generateFile(file string) {
+func (g *Generator) generateFile(file, extension string) {
 	err := os.MkdirAll(g.dest, 0750)
 	check(err)
 
@@ -36,7 +46,7 @@ func (g *Generator) generateFile(file string) {
 		fileName = file
 	}
 
-	f, err := os.Create(path.Join(g.dest, fileName+getExtension(file)))
+	f, err := os.Create(path.Join(g.dest, fileName+extension))
 	check(err)
 	//goland:noinspection GoUnhandledErrorResult
 	defer f.Close()
@@ -51,6 +61,7 @@ func NewGenerator(cmdType string, opt *CmdOptionsModel, vars TmplVars) *Generato
 	tmplPath := path.Join("templates", cmdType)
 
 	return &Generator{
+		tmplType: cmdType,
 		tmplPath: tmplPath,
 		dest:     destPath,
 		vars:     vars,
@@ -64,18 +75,18 @@ func createDir(dirName string) {
 			panic(err)
 		}
 	} else {
-		DirectoryExistPrompt()
-	}
-}
+		shouldOverwrite := ShouldOverwritePrompt()
 
-func getExtension(file string) string {
-	switch file {
-	case "stories":
-		return ".stories.tsx"
-	case "test":
-		return ".test.tsx"
-	default:
-		return ".tsx"
+		if !shouldOverwrite {
+			fmt.Println("Generation cancelled. Nothing was generated.")
+			os.Exit(0)
+		}
+
+		err = os.RemoveAll(dirName)
+		check(err)
+
+		err = os.MkdirAll(dirName, 0755)
+		check(err)
 	}
 }
 

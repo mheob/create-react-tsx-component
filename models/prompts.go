@@ -99,16 +99,17 @@ func WithStorybookPrompt(opt *CmdOptionsModel) {
 	}
 }
 
-func DirectoryExistPrompt() {
+func ShouldOverwritePrompt() bool {
 	prompt := promptui.Prompt{
 		Label:     "Directory already exists, do you want to overwrite it",
 		IsConfirm: true,
 	}
 
 	if _, err := prompt.Run(); err != nil {
-		fmt.Println("Generation cancelled. Nothing was generated.")
-		os.Exit(0)
+		return false
 	}
+
+	return true
 }
 
 func checkPromptError(err error) {

@@ -39,7 +39,7 @@ func pageCmdRun(cmd *cobra.Command, args []string) {
 	}
 
 	if dest, _ := cmd.Flags().GetString("dest"); dest == "" {
-		pageOpt.Dest = "./pages"
+		pageOpt.Dest = "./src/pages"
 	}
 
 	if usesKebabCase, _ := cmd.Flags().GetBool("kebab-case"); usesKebabCase {
@@ -54,21 +54,11 @@ func PreparePageGeneration(opt *models.CmdOptionsModel) {
 
 	var vars = make(models.TmplVars)
 	vars["Name"] = opt.ReactName
-	vars["FileName"] = opt.FileName
-	vars["WithTest"] = opt.WithTest
 
-	g := models.NewGenerator("component", opt, vars)
+	g := models.NewGenerator("page", opt, vars)
 
-	files := make([]string, 1, 3)
-	files[0] = "component"
-
-	if opt.WithStorybook {
-		files = append(files, "stories")
-	}
-
-	if opt.WithTest {
-		files = append(files, "test")
-	}
+	files := make([]models.File, 1)
+	files[0] = models.File{Name: "page", Extension: ".tsx"}
 
 	g.GenerateFiles(files)
 }
