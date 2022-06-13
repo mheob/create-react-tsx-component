@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/mheob/create-react-tsx-component/models"
-	"github.com/mheob/create-react-tsx-component/prompts"
 	"github.com/spf13/cobra"
 )
 
@@ -41,18 +40,18 @@ func init() {
 }
 
 func rootCmdRun(cmd *cobra.Command, args []string) {
-	prompts.TypePrompt(rootOpt)
-	prompts.NamePrompt(rootOpt)
-	prompts.DestPrompt(rootOpt)
-	prompts.UsesKebabCasePrompt(rootOpt)
+	models.TypePrompt(rootOpt)
+	models.NamePrompt(rootOpt)
+	models.DestPrompt(rootOpt)
+	models.UsesKebabCasePrompt(rootOpt)
 
 	switch rootOpt.Type {
 	case "component":
-		prompts.WithStorybookPrompt(rootOpt)
-		prompts.WithTestPrompt(rootOpt)
+		models.WithStorybookPrompt(rootOpt)
+		models.WithTestPrompt(rootOpt)
 		PrepareComponentGeneration(rootOpt)
 	case "hook":
-		prompts.WithTestPrompt(rootOpt)
+		models.WithTestPrompt(rootOpt)
 		PrepareHookGeneration(rootOpt)
 	case "page":
 		PreparePageGeneration(rootOpt)

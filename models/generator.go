@@ -24,6 +24,8 @@ func NewGenerator(cmdType string, opt *CmdOptionsModel, vars TmplVars) *Generato
 }
 
 func (g *Generator) GenerateFiles(files []string) {
+	createDir(g.dest)
+
 	for _, file := range files {
 		g.generateFile(file)
 	}
@@ -37,8 +39,6 @@ func (g *Generator) generateFile(file string) {
 	tmplFile, err := template.ParseFiles(path.Join(g.tmplPath, file+".tmpl"))
 	check(err)
 
-	// TODO: Add check if dest already exists and prompt a "are you sure" question
-
 	fileName := g.options.FileName
 	if file == "index" {
 		fileName = file
@@ -51,6 +51,16 @@ func (g *Generator) generateFile(file string) {
 
 	err = tmplFile.Execute(f, g.vars)
 	check(err)
+}
+
+func createDir(dirName string) {
+	if _, err := os.Stat(dirName); os.IsNotExist(err) {
+		if err := os.MkdirAll(dirName, 0755); err != nil {
+			panic(err)
+		}
+	} else {
+		DirectoryExistPrompt()
+	}
 }
 
 func getExtension(file string) string {

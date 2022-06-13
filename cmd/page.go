@@ -4,7 +4,6 @@ import (
 	"strings"
 
 	"github.com/mheob/create-react-tsx-component/models"
-	"github.com/mheob/create-react-tsx-component/prompts"
 	"github.com/spf13/cobra"
 )
 
@@ -31,9 +30,9 @@ func pageCmdRun(cmd *cobra.Command, args []string) {
 	pageOpt.Name = strings.Join(args, " ")
 
 	if interactive, _ := cmd.Flags().GetBool("interactive"); interactive {
-		prompts.NamePrompt(pageOpt)
-		prompts.DestPrompt(pageOpt)
-		prompts.UsesKebabCasePrompt(pageOpt)
+		models.NamePrompt(pageOpt)
+		models.DestPrompt(pageOpt)
+		models.UsesKebabCasePrompt(pageOpt)
 
 		PreparePageGeneration(pageOpt)
 		return

@@ -4,7 +4,6 @@ import (
 	"strings"
 
 	"github.com/mheob/create-react-tsx-component/models"
-	"github.com/mheob/create-react-tsx-component/prompts"
 	"github.com/spf13/cobra"
 )
 
@@ -34,18 +33,18 @@ func componentCmdRun(cmd *cobra.Command, args []string) {
 	componentOpt.Name = strings.Join(args, " ")
 
 	if interactive, _ := cmd.Flags().GetBool("interactive"); interactive {
-		prompts.NamePrompt(componentOpt)
-		prompts.DestPrompt(componentOpt)
-		prompts.UsesKebabCasePrompt(componentOpt)
-		prompts.WithStorybookPrompt(componentOpt)
-		prompts.WithTestPrompt(componentOpt)
+		models.NamePrompt(componentOpt)
+		models.DestPrompt(componentOpt)
+		models.UsesKebabCasePrompt(componentOpt)
+		models.WithStorybookPrompt(componentOpt)
+		models.WithTestPrompt(componentOpt)
 
 		PrepareComponentGeneration(componentOpt)
 		return
 	}
 
 	if dest, _ := cmd.Flags().GetString("dest"); dest == "" {
-		componentOpt.Dest = "./components"
+		componentOpt.Dest = "./src/components"
 	}
 
 	if usesKebabCase, _ := cmd.Flags().GetBool("kebab-case"); usesKebabCase {

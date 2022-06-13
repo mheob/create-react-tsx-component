@@ -4,7 +4,6 @@ import (
 	"strings"
 
 	"github.com/mheob/create-react-tsx-component/models"
-	"github.com/mheob/create-react-tsx-component/prompts"
 	"github.com/spf13/cobra"
 )
 
@@ -33,10 +32,10 @@ func hookCmdRun(cmd *cobra.Command, args []string) {
 	hookOpt.Name = strings.Join(args, " ")
 
 	if interactive, _ := cmd.Flags().GetBool("interactive"); interactive {
-		prompts.NamePrompt(hookOpt)
-		prompts.DestPrompt(hookOpt)
-		prompts.UsesKebabCasePrompt(hookOpt)
-		prompts.WithTestPrompt(hookOpt)
+		models.NamePrompt(hookOpt)
+		models.DestPrompt(hookOpt)
+		models.UsesKebabCasePrompt(hookOpt)
+		models.WithTestPrompt(hookOpt)
 
 		PrepareHookGeneration(hookOpt)
 		return
