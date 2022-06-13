@@ -2,8 +2,8 @@ import type { ComponentMeta, ComponentStory } from '@storybook/react'
 import {{.Name}} from './{{.FileName}}'
 
 export default {
-component: {{.Name}},
-title: 'Components/{{.Name}}',
+  component: {{.Name}},
+  title: 'Components/{{.Name}}',
 } as ComponentMeta<typeof {{.Name}}>
 
 export const $_Playground: ComponentStory<typeof {{.Name}}> = (args) => <{{.Name}} {...args} />

@@ -1,0 +1,19 @@
+import { GetStaticProps } from 'next'
+import { ReactElement } from 'react';
+
+interface {{.Name}}Props {
+  title: string
+}
+
+const {{.Name}} = ({ title }: {{.Name}}Props): ReactElement => {
+  return (
+    <div>{title}</div>
+  )
+}
+
+export const getStaticProps: GetStaticProps = async () => {
+  const title: string = 'Hello World'
+  return { props: { title } }
+}
+
+export default {{.Name}}

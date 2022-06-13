@@ -1,8 +1,10 @@
-{{if .WithTest}}export {{end}}type Props = {
+import { ReactElement } from 'react';
+
+{{if .WithTest}}export {{end}}interface {{.Name}}Props {
   title: string
 }
 
-export const {{.Name}} = ({ title }: Props): JSX.Element => {
+const {{.Name}} = ({ title }: {{.Name}}Props): ReactElement => {
   return (
     <div>{title}</div>
   )

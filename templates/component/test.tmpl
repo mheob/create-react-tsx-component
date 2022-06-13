@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react'
-import { {{.Name}}, type Props } from './{{.FileName}}'
+import { {{.Name}}, type {{.Name}}Props } from './{{.FileName}}'
 
-const mockedArgs: Props = {}
+const mockedArgs: {{.Name}}Props = {}
 
 const getComponent = (props: Partial<{{.Name}}Props> = mockedArgs) => <{{.Name}} {...mockedArgs} {...props} />
 
