@@ -70,23 +70,18 @@ func NewGenerator(cmdType string, opt *CmdOptionsModel, vars TmplVars) *Generato
 }
 
 func createDir(dirName string) {
-	if _, err := os.Stat(dirName); os.IsNotExist(err) {
-		if err := os.MkdirAll(dirName, 0755); err != nil {
-			panic(err)
-		}
-	} else {
-		shouldOverwrite := ShouldOverwritePrompt()
-
-		if !shouldOverwrite {
+	if _, err := os.Stat(dirName); !os.IsNotExist(err) {
+		if shouldOverwrite := ShouldOverwritePrompt(); !shouldOverwrite {
 			fmt.Println("Generation cancelled. Nothing was generated.")
 			os.Exit(0)
 		}
 
 		err = os.RemoveAll(dirName)
 		check(err)
+	}
 
-		err = os.MkdirAll(dirName, 0755)
-		check(err)
+	if err := os.MkdirAll(dirName, 0755); err != nil {
+		panic(err)
 	}
 }
 
