@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"fmt"
+	"strconv"
 	"testing"
 
 	"github.com/mheob/create-react-tsx-component/tests"
@@ -187,7 +189,7 @@ func toKebabCase(tb testing.TB) {
 func runCaseChecks(cases tests.Cases, tb testing.TB, cb func(string) string) {
 	for in, expected := range cases {
 		result := cb(in)
-		assert.EqualValues(tb, expected, result)
+		assert.EqualValues(tb, expected, result, fmt.Sprintf("Error at: \"'%s': %s\"", in, expected))
 	}
 }
 
@@ -205,10 +207,14 @@ func checkCharIsDelimiter(tb testing.TB) {
 		'.': true,
 	}
 
-	for in, out := range cases {
+	for in, expected := range cases {
 		result := charIsDelimiter(in)
-		if result != out {
-			tb.Errorf("%q (%t != %t)", in, result, out)
-		}
+		//assert.EqualValues(tb, expected, result)
+		assert.EqualValues(
+			tb,
+			expected,
+			result,
+			fmt.Sprintf("Error at: \"'%s': %s\"", string(in), strconv.FormatBool(expected)),
+		)
 	}
 }
