@@ -1,12 +1,12 @@
-import { render } from '@testing-library/react'
-import { {{.Name}}, type {{.Name}}Props } from './{{.FileName}}'
+import { render } from '@testing-library/react';
+import { {{.Name}}, type {{.Name}}Props } from './{{.FileName}}';
 
-const mockedArgs: {{.Name}}Props = {}
+const mockedArgs: {{.Name}}Props = {};
 
-const getComponent = (props: Partial<{{.Name}}Props> = mockedArgs) => <{{.Name}} {...mockedArgs} {...props} />
+const getComponent = (props: Partial<{{.Name}}Props> = mockedArgs) => <{{.Name}} {...mockedArgs} {...props} />;
 
 describe('{{.Name}}', () => {
   it('should render correctly', () => {
-  	render(getComponent())
+  	render(getComponent());
   })
 })
